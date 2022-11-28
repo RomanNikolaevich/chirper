@@ -15,12 +15,10 @@ class ChirpController extends Controller
         ]);
     }
 
-
     public function create()
     {
         //
     }
-
 
     public function store(Request $request)
     {
@@ -33,24 +31,32 @@ class ChirpController extends Controller
         return redirect(route('chirps.index'));
     }
 
-
     public function show(Chirp $chirp)
     {
         //
     }
 
-
     public function edit(Chirp $chirp)
     {
-        //
-    }
+        $this->authorize('update', $chirp);
 
+        return view('chirps.edit', [
+            'chirp' => $chirp,
+        ]);
+    }
 
     public function update(Request $request, Chirp $chirp)
     {
-        //
-    }
+        $this->authorize('update', $chirp);
 
+        $validated = $request->validate([
+            'message' => 'required|string|max:255',
+        ]);
+
+        $chirp->update($validated);
+
+        return redirect(route('chirps.index'));
+    }
 
     public function destroy(Chirp $chirp)
     {
